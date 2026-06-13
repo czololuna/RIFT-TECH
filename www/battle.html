@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>RIFT-TECH Battle</title>
+
+<style>
+body {
+  margin: 0;
+  background: #050814;
+  color: white;
+  font-family: Arial;
+}
+
+#top {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: #111827;
+}
+
+.hero {
+  width: 180px;
+  text-align: center;
+}
+
+.hero img {
+  width: 100%;
+  border: 2px solid gold;
+  border-radius: 10px;
+}
+
+#arena {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  color: #8aa4ff;
+}
+
+#hand {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.card {
+  width: 120px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: gold;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+  border-radius: 8px 8px 0 0;
+}
+
+.card .card-info {
+  text-align: center;
+  font-size: 11px;
+  padding: 4px;
+  background: #1a2035;
+  border-radius: 0 0 8px 8px;
+}
+
+#hp-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 20px;
+  background: #0d1525;
+  font-size: 16px;
+}
+
+#log {
+  min-height: 40px;
+  text-align: center;
+  padding: 8px;
+  color: #8aa4ff;
+  font-size: 18px;
+  background: #0d1525;
+}
+
+#controls {
+  text-align: center;
+  padding: 10px;
+}
+
+#endTurnBtn {
+  padding: 10px 24px;
+  background: gold;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  color: #050814;
+}
+
+#endTurnBtn:hover {
+  background: orange;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Góra: bohaterowie + energia -->
+<div id="top">
+
+  <div class="hero">
+    <img id="playerHero" alt="Gracz">
+    <div id="playerName">Gracz</div>
+  </div>
+
+  <div style="text-align:center;">
+    <h2 style="margin:4px;">⚡ RIFT BATTLE ⚡</h2>
+    <div>Tura: <span id="turnNum">1</span></div>
+    <div>Energia: <span id="energy">3</span> / <span id="maxEnergy">3</span></div>
+  </div>
+
+  <div class="hero">
+    <img id="enemyHero" alt="Wróg">
+    <div>Shadowflare — AI</div>
+  </div>
+
+</div>
+
+<!-- Paski HP -->
+<div id="hp-bar">
+  <span>❤️ Twoje HP: <strong id="playerHP">30</strong></span>
+  <span>💀 Wróg HP: <strong id="enemyHP">30</strong></span>
+</div>
+
+<!-- Log areny -->
+<div id="log">Witaj w Rift Battle! Twoja tura — zagraj kartę!</div>
+
+<!-- Pole bitwy -->
+<div id="arena">
+  <div id="playerField" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"></div>
+</div>
+
+<!-- Ręka gracza -->
+<div id="hand"></div>
+
+<!-- Przyciski -->
+<div id="controls">
+  <button id="endTurnBtn">Zakończ turę ⏭️</button>
+</div>
+
+<script src="battle.js"></script>
+
+</body>
+</html>

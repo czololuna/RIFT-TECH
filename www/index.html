@@ -1,141 +1,318 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RIFT-TECH</title>
-
+<title>RIFT-TECH Battle</title>
 <style>
+*{ box-sizing:border-box; margin:0; padding:0; }
+
 body{
-margin:0;
-background:#050814;
-font-family:Arial;
-color:white;
+  background:#050814;
+  color:white;
+  font-family:Arial;
+  min-height:100vh;
 }
 
-header{
-text-align:center;
-padding:20px;
-font-size:32px;
-font-weight:bold;
-color:gold;
+#top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  background:#111827;
+  border-bottom:2px solid #1e3a5f;
 }
 
-.subtitle{
-text-align:center;
-margin-bottom:20px;
-color:#8aa4ff;
+.hero{
+  width:140px;
+  text-align:center;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-padding:15px;
-max-width:900px;
-margin:auto;
+.hero img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border:2px solid gold;
+  border-radius:10px;
+}
+
+.hero-name{
+  font-size:11px;
+  color:#aaa;
+  margin-top:4px;
+}
+
+.hp-bar-wrap{
+  background:#333;
+  border-radius:5px;
+  height:10px;
+  margin-top:4px;
+}
+
+.hp-bar{
+  height:10px;
+  border-radius:5px;
+  transition:width 0.4s;
+}
+
+#playerHpBar{ background:#22c55e; }
+#enemyHpBar{  background:#ef4444; }
+
+#mid{
+  text-align:center;
+}
+
+#mid h2{
+  font-size:22px;
+  color:gold;
+  letter-spacing:2px;
+}
+
+.energy-display{
+  font-size:14px;
+  margin-top:6px;
+  color:#8aa4ff;
+}
+
+.energy-gems{
+  display:flex;
+  justify-content:center;
+  gap:4px;
+  margin-top:4px;
+  flex-wrap:wrap;
+}
+
+.gem{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#1e40af;
+  border:1px solid #3b82f6;
+}
+
+.gem.active{
+  background:#3b82f6;
+  box-shadow:0 0 6px #3b82f6;
+}
+
+#arena{
+  min-height:120px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+  color:#8aa4ff;
+  padding:20px;
+  text-align:center;
+  border-bottom:1px solid #1e3a5f;
+  background:#080f1e;
+}
+
+#board{
+  display:flex;
+  gap:10px;
+  padding:10px 20px;
+  min-height:160px;
+  background:#0a1020;
+  border-bottom:1px solid #1e3a5f;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.board-label{
+  width:100%;
+  font-size:11px;
+  color:#555;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.unit{
+  width:80px;
+  background:#111827;
+  border:1px solid #22c55e;
+  border-radius:8px;
+  text-align:center;
+  padding:4px;
+  font-size:11px;
+  position:relative;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+
+.unit:hover{ transform:scale(1.05); }
+
+.unit img{
+  width:100%;
+  height:70px;
+  object-fit:cover;
+  border-radius:5px;
+}
+
+.unit.exhausted{
+  opacity:0.5;
+  border-color:#555;
+}
+
+.unit.enemy-unit{
+  border-color:#ef4444;
+}
+
+#hand-label{
+  padding:6px 20px;
+  font-size:12px;
+  color:#555;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  background:#050814;
+}
+
+#hand{
+  display:flex;
+  gap:8px;
+  padding:10px 20px;
+  overflow-x:auto;
+  background:#050814;
+  min-height:160px;
+  align-items:flex-start;
 }
 
 .card{
-background:#111827;
-border:2px solid #333;
-border-radius:15px;
-overflow:hidden;
-transition:.2s;
-cursor:pointer;
+  width:110px;
+  min-width:110px;
+  border:2px solid #333;
+  border-radius:10px;
+  background:#0d1b2a;
+  cursor:pointer;
+  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 .card:hover{
-transform:scale(1.03);
-border-color:gold;
+  transform:translateY(-10px);
+  border-color:gold;
+  box-shadow:0 0 15px rgba(255,215,0,0.4);
+}
+
+.card.disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+
+.card.disabled:hover{
+  transform:none;
+  border-color:#333;
+  box-shadow:none;
 }
 
 .card img{
-width:100%;
-display:block;
+  width:100%;
+  height:80px;
+  object-fit:cover;
+  border-radius:8px 8px 0 0;
+  display:block;
 }
 
-.name{
-padding:10px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
+.card-body{
+  padding:4px;
+  text-align:center;
 }
 
-.btn{
-display:block;
-margin:25px auto;
-width:250px;
-height:55px;
-font-size:22px;
-background:gold;
-border:none;
-border-radius:10px;
-font-weight:bold;
+.card-name{
+  font-size:11px;
+  font-weight:bold;
+  color:#fff;
+  margin-bottom:2px;
 }
 
-.selected{
-border:3px solid gold;
-box-shadow:0 0 20px gold;
+.card-stats{
+  font-size:10px;
+  color:#aaa;
+  display:flex;
+  justify-content:space-around;
+}
+
+.card-cost{
+  font-size:16px;
+  font-weight:bold;
+  color:#3b82f6;
+  position:absolute;
+  top:-8px;
+  left:-8px;
+  background:#0d1b2a;
+  border:2px solid #3b82f6;
+  border-radius:50%;
+  width:24px;
+  height:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card{ position:relative; }
+
+#end-btn{
+  display:block;
+  width:calc(100% - 40px);
+  margin:10px 20px;
+  padding:12px;
+  background:linear-gradient(135deg,#854d0e,#ca8a04);
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  letter-spacing:1px;
+  transition:opacity 0.2s;
+}
+
+#end-btn:hover{ opacity:0.85; }
+
+#log{
+  padding:10px 20px;
+  font-size:12px;
+  color:#555;
+  min-height:40px;
 }
 </style>
 </head>
-
 <body>
 
-<header>RIFT-TECH</header>
-<div class="subtitle">FRACTURED EARTH</div>
+<div id="top">
+  <div class="hero">
+    <img id="playerHero" src="assets/heroes/valkyria.webp">
+    <div class="hero-name" id="playerName">Valkyria</div>
+    <div class="hp-bar-wrap"><div class="hp-bar" id="playerHpBar" style="width:100%"></div></div>
+    <div id="playerHpText" style="font-size:11px;color:#22c55e;margin-top:2px;">❤️ 30/30</div>
+  </div>
 
-<div class="grid">
+  <div id="mid">
+    <h2>⚡ RIFT BATTLE ⚡</h2>
+    <div class="energy-display">Energia: <span id="energyText">3/3</span></div>
+    <div class="energy-gems" id="gems"></div>
+    <div style="font-size:11px;color:#555;margin-top:4px;">Tura: <span id="turnNum">1</span></div>
+  </div>
 
-<div class="card" onclick="pick('valkyria',this)">
-<img src="assets/heroes/valkyria.webp">
-<div class="name">VALKYRIA</div>
+  <div class="hero">
+    <img id="enemyHero" src="assets/heroes/shadowflare.webp">
+    <div class="hero-name">Shadowflare</div>
+    <div class="hp-bar-wrap"><div class="hp-bar" id="enemyHpBar" style="width:100%"></div></div>
+    <div id="enemyHpText" style="font-size:11px;color:#ef4444;margin-top:2px;">❤️ 30/30</div>
+  </div>
 </div>
 
-<div class="card" onclick="pick('vanguard',this)">
-<img src="assets/heroes/vanguard.webp">
-<div class="name">VANGUARD</div>
+<div id="arena">Twoja tura — zagraj kartę lub zakończ turę!</div>
+
+<div id="board">
+  <div class="board-label">🛡️ Pole bitwy</div>
 </div>
 
-<div class="card" onclick="pick('maglander',this)">
-<img src="assets/heroes/maglander.webp">
-<div class="name">MAGLANDER</div>
-</div>
+<div id="hand-label">🃏 Twoja ręka</div>
+<div id="hand"></div>
 
-<div class="card" onclick="pick('shadowflare',this)">
-<img src="assets/heroes/shadowflare.webp">
-<div class="name">SHADOWFLARE</div>
-</div>
+<button id="end-btn" onclick="endTurn()">Zakończ turę ⏭️</button>
 
-</div>
+<div id="log"></div>
 
-<button class="btn" onclick="startGame()">
-START
-</button>
-
-<script>
-let faction=null;
-
-function pick(name,el){
-document.querySelectorAll(".card")
-.forEach(c=>c.classList.remove("selected"));
-
-el.classList.add("selected");
-faction=name;
-}
-
-function startGame(){
-if(!faction){
-alert("Wybierz frakcję");
-return;
-}
-
-localStorage.setItem("faction",faction);
-
-alert("Wybrano: "+faction);
-}
-</script>
-
+<script src="battle.js"></script>
 </body>
 </html>
