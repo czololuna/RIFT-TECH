@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RIFT-TECH</title>
+
+<style>
+body{
+margin:0;
+background:#050814;
+font-family:Arial;
+color:white;
+}
+
+header{
+text-align:center;
+padding:20px;
+font-size:32px;
+font-weight:bold;
+color:gold;
+}
+
+.subtitle{
+text-align:center;
+margin-bottom:20px;
+color:#8aa4ff;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+padding:15px;
+max-width:900px;
+margin:auto;
+}
+
+.card{
+background:#111827;
+border:2px solid #333;
+border-radius:15px;
+overflow:hidden;
+transition:.2s;
+cursor:pointer;
+}
+
+.card:hover{
+transform:scale(1.03);
+border-color:gold;
+}
+
+.card img{
+width:100%;
+display:block;
+}
+
+.name{
+padding:10px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+.btn{
+display:block;
+margin:25px auto;
+width:250px;
+height:55px;
+font-size:22px;
+background:gold;
+border:none;
+border-radius:10px;
+font-weight:bold;
+}
+
+.selected{
+border:3px solid gold;
+box-shadow:0 0 20px gold;
+}
+</style>
+</head>
+
+<body>
+
+<header>RIFT-TECH</header>
+<div class="subtitle">FRACTURED EARTH</div>
+
+<div class="grid">
+
+<div class="card" onclick="pick('valkyria',this)">
+<img src="assets/heroes/valkyria.webp">
+<div class="name">VALKYRIA</div>
+</div>
+
+<div class="card" onclick="pick('vanguard',this)">
+<img src="assets/heroes/vanguard.webp">
+<div class="name">VANGUARD</div>
+</div>
+
+<div class="card" onclick="pick('maglander',this)">
+<img src="assets/heroes/maglander.webp">
+<div class="name">MAGLANDER</div>
+</div>
+
+<div class="card" onclick="pick('shadowflare',this)">
+<img src="assets/heroes/shadowflare.webp">
+<div class="name">SHADOWFLARE</div>
+</div>
+
+</div>
+
+<button class="btn" onclick="startGame()">
+START
+</button>
+
+<script>
+let faction=null;
+
+function pick(name,el){
+document.querySelectorAll(".card")
+.forEach(c=>c.classList.remove("selected"));
+
+el.classList.add("selected");
+faction=name;
+}
+
+function startGame(){
+if(!faction){
+alert("Wybierz frakcję");
+return;
+}
+
+localStorage.setItem("faction",faction);
+
+alert("Wybrano: "+faction);
+}
+</script>
+
+</body>
+</html>

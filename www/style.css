@@ -1,0 +1,14 @@
+*{box-sizing:border-box}
+body{margin:0;background:#050610;color:white;font-family:Arial,sans-serif;overflow:hidden}
+#game{width:100vw;height:100vh;background:url("assets/backgrounds/game_bg.png") center/cover}
+header{text-align:center;color:#f0c832;font-weight:bold;padding:6px}
+main{display:flex;height:68vh}
+#board{flex:1;padding:8px;display:flex;flex-direction:column;justify-content:space-around}
+aside{width:28vw;max-width:220px;background:#080817cc;padding:8px;border-left:1px solid #444}
+.row{display:flex;gap:6px;min-height:120px;align-items:center}
+.unit,.card{width:96px;height:132px;background:#222;border:2px solid #777;border-radius:8px;background-size:cover;background-position:center;position:relative}
+.card.selected,.unit.selected{border-color:#f0c832;box-shadow:0 0 12px #f0c832}
+.card span,.unit span{position:absolute;left:4px;bottom:4px;background:#000b;padding:2px 4px;font-size:11px}
+#hand{height:24vh;display:flex;gap:6px;padding:6px;overflow-x:auto}
+button{width:100%;margin:4px 0;padding:10px;background:#202040;color:white;border:1px solid #777;border-radius:6px}
+#log{font-size:12px;margin-top:8px;line-height:1.25}
