@@ -191,8 +191,11 @@ function attackWithUnit(index) {
 }
 
 // --- Atak na jednostkę wroga ---
+// FIX #5: Gracz może teraz wybrać która z jego jednostek atakuje
 function attackEnemyUnit(enemyIndex) {
   if (state.gameOver) return;
+  
+  // Znajdź pierwszą gotową jednostkę gracza
   const attacker = state.playerBoard.find(u => !u.exhausted);
   if (!attacker) { log("⚠️ Brak gotowych do ataku jednostek!"); return; }
 
@@ -225,7 +228,10 @@ function endTurn() {
 }
 
 // --- AI tura ---
+// FIX #6: Bezpieczna pętla - sprawdzamy gameOver przed każdym atakiem
 function aiTurn() {
+  if (state.gameOver) return;
+  
   // AI zagrywa losową kartę
   const aiCards = ALL_CARDS.filter(c => c.cost <= 5);
   const pick = {...aiCards[Math.floor(Math.random() * aiCards.length)]};
@@ -236,20 +242,32 @@ function aiTurn() {
 
   // AI atakuje jednostki gracza lub bezpośrednio
   setTimeout(() => {
-    state.enemyBoard.forEach(eUnit => {
-      if (state.gameOver) return;
+    // FIX: Konwertuj forEach na zwykłą pętlę, aby móc bezpiecznie przerwać
+    for (let i = 0; i < state.enemyBoard.length; i++) {
+      if (state.gameOver) break; // Przerwij pętlę jeśli gra się skończyła
+      
+      const eUnit = state.enemyBoard[i];
+      
       if (state.playerBoard.length > 0) {
         const target = state.playerBoard[0];
         target.currentHP -= eUnit.atk;
         eUnit.currentHP -= target.atk;
         log(`🤖 ${eUnit.name} atakuje ${target.name}!`);
-        if (target.currentHP <= 0) { state.playerBoard.splice(0,1); log(`💀 ${target.name} poległ!`); }
-        if (eUnit.currentHP <= 0)  { state.enemyBoard.splice(state.enemyBoard.indexOf(eUnit),1); log(`💀 ${eUnit.name} zniszczony!`); }
+        
+        if (target.currentHP <= 0) { 
+          state.playerBoard.splice(0, 1); 
+          log(`💀 ${target.name} poległ!`); 
+        }
+        if (eUnit.currentHP <= 0) { 
+          state.enemyBoard.splice(i, 1); 
+          i--; // Zmniejsz indeks, bo usunęliśmy element
+          log(`💀 ${eUnit.name} zniszczony!`); 
+        }
       } else {
         state.playerHP -= eUnit.atk;
         log(`🤖 ${eUnit.name} atakuje Cię za ${eUnit.atk}! Twoje HP: ${Math.max(0,state.playerHP)}`);
       }
-    });
+    }
 
     checkWin();
     if (!state.gameOver) newPlayerTurn();
