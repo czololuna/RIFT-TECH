@@ -3,162 +3,315 @@
 <head>
 <meta charset="UTF-8">
 <title>RIFT-TECH Battle</title>
-
 <style>
-body {
-  margin: 0;
-  background: #050814;
-  color: white;
-  font-family: Arial;
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  background:#050814;
+  color:white;
+  font-family:Arial;
+  min-height:100vh;
 }
 
-#top {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background: #111827;
+#top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  background:#111827;
+  border-bottom:2px solid #1e3a5f;
 }
 
-.hero {
-  width: 180px;
-  text-align: center;
+.hero{
+  width:140px;
+  text-align:center;
 }
 
-.hero img {
-  width: 100%;
-  border: 2px solid gold;
-  border-radius: 10px;
+.hero img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border:2px solid gold;
+  border-radius:10px;
 }
 
-#arena {
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 28px;
-  color: #8aa4ff;
+.hero-name{
+  font-size:11px;
+  color:#aaa;
+  margin-top:4px;
 }
 
-#hand {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  overflow-x: auto;
+.hp-bar-wrap{
+  background:#333;
+  border-radius:5px;
+  height:10px;
+  margin-top:4px;
 }
 
-.card {
-  width: 120px;
-  border: 2px solid #333;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
+.hp-bar{
+  height:10px;
+  border-radius:5px;
+  transition:width 0.4s;
 }
 
-.card:hover {
-  transform: translateY(-8px);
-  border-color: gold;
+#playerHpBar{ background:#22c55e; }
+#enemyHpBar{  background:#ef4444; }
+
+#mid{
+  text-align:center;
 }
 
-.card img {
-  width: 100%;
-  display: block;
-  border-radius: 8px 8px 0 0;
+#mid h2{
+  font-size:22px;
+  color:gold;
+  letter-spacing:2px;
 }
 
-.card .card-info {
-  text-align: center;
-  font-size: 11px;
-  padding: 4px;
-  background: #1a2035;
-  border-radius: 0 0 8px 8px;
+.energy-display{
+  font-size:14px;
+  margin-top:6px;
+  color:#8aa4ff;
 }
 
-#hp-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 20px;
-  background: #0d1525;
-  font-size: 16px;
+.energy-gems{
+  display:flex;
+  justify-content:center;
+  gap:4px;
+  margin-top:4px;
+  flex-wrap:wrap;
 }
 
-#log {
-  min-height: 40px;
-  text-align: center;
-  padding: 8px;
-  color: #8aa4ff;
-  font-size: 18px;
-  background: #0d1525;
+.gem{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#1e40af;
+  border:1px solid #3b82f6;
 }
 
-#controls {
-  text-align: center;
-  padding: 10px;
+.gem.active{
+  background:#3b82f6;
+  box-shadow:0 0 6px #3b82f6;
 }
 
-#endTurnBtn {
-  padding: 10px 24px;
-  background: gold;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  color: #050814;
+#arena{
+  min-height:120px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+  color:#8aa4ff;
+  padding:20px;
+  text-align:center;
+  border-bottom:1px solid #1e3a5f;
+  background:#080f1e;
 }
 
-#endTurnBtn:hover {
-  background: orange;
+#board{
+  display:flex;
+  gap:10px;
+  padding:10px 20px;
+  min-height:160px;
+  background:#0a1020;
+  border-bottom:1px solid #1e3a5f;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.board-label{
+  width:100%;
+  font-size:11px;
+  color:#555;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.unit{
+  width:80px;
+  background:#111827;
+  border:1px solid #22c55e;
+  border-radius:8px;
+  text-align:center;
+  padding:4px;
+  font-size:11px;
+  position:relative;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+
+.unit:hover{ transform:scale(1.05); }
+
+.unit img{
+  width:100%;
+  height:70px;
+  object-fit:cover;
+  border-radius:5px;
+}
+
+.unit.exhausted{
+  opacity:0.5;
+  border-color:#555;
+}
+
+.unit.enemy-unit{
+  border-color:#ef4444;
+}
+
+#hand-label{
+  padding:6px 20px;
+  font-size:12px;
+  color:#555;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  background:#050814;
+}
+
+#hand{
+  display:flex;
+  gap:8px;
+  padding:10px 20px;
+  overflow-x:auto;
+  background:#050814;
+  min-height:160px;
+  align-items:flex-start;
+}
+
+.card{
+  width:110px;
+  min-width:110px;
+  border:2px solid #333;
+  border-radius:10px;
+  background:#0d1b2a;
+  cursor:pointer;
+  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  border-color:gold;
+  box-shadow:0 0 15px rgba(255,215,0,0.4);
+}
+
+.card.disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+
+.card.disabled:hover{
+  transform:none;
+  border-color:#333;
+  box-shadow:none;
+}
+
+.card img{
+  width:100%;
+  height:80px;
+  object-fit:cover;
+  border-radius:8px 8px 0 0;
+  display:block;
+}
+
+.card-body{
+  padding:4px;
+  text-align:center;
+}
+
+.card-name{
+  font-size:11px;
+  font-weight:bold;
+  color:#fff;
+  margin-bottom:2px;
+}
+
+.card-stats{
+  font-size:10px;
+  color:#aaa;
+  display:flex;
+  justify-content:space-around;
+}
+
+.card-cost{
+  font-size:16px;
+  font-weight:bold;
+  color:#3b82f6;
+  position:absolute;
+  top:-8px;
+  left:-8px;
+  background:#0d1b2a;
+  border:2px solid #3b82f6;
+  border-radius:50%;
+  width:24px;
+  height:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#end-btn{
+  display:block;
+  width:calc(100% - 40px);
+  margin:10px 20px;
+  padding:12px;
+  background:linear-gradient(135deg,#854d0e,#ca8a04);
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  letter-spacing:1px;
+  transition:opacity 0.2s;
+}
+
+#end-btn:hover{ opacity:0.85; }
+
+#log{
+  padding:10px 20px;
+  font-size:12px;
+  color:#555;
+  min-height:40px;
 }
 </style>
 </head>
-
 <body>
 
-<!-- Góra: bohaterowie + energia -->
 <div id="top">
+  <div class="hero">
+    <img id="playerHero" src="assets/heroes/valkyria.webp" onerror="this.src='assets/heroes/valkyria.webp'">
+    <div class="hero-name" id="playerName">Valkyria</div>
+    <div class="hp-bar-wrap"><div class="hp-bar" id="playerHpBar" style="width:100%"></div></div>
+    <div id="playerHpText" style="font-size:11px;color:#22c55e;margin-top:2px;">❤️ 30/30</div>
+  </div>
+
+  <div id="mid">
+    <h2>⚡ RIFT BATTLE ⚡</h2>
+    <div class="energy-display">Energia: <span id="energyText">3/3</span></div>
+    <div class="energy-gems" id="gems"></div>
+    <div style="font-size:11px;color:#555;margin-top:4px;">Tura: <span id="turnNum">1</span></div>
+  </div>
 
   <div class="hero">
-    <img id="playerHero" alt="Gracz">
-    <div id="playerName">Gracz</div>
+    <img id="enemyHero" src="assets/heroes/shadowflare.webp" onerror="this.src='assets/heroes/shadowflare.webp'">
+    <div class="hero-name">Shadowflare</div>
+    <div class="hp-bar-wrap"><div class="hp-bar" id="enemyHpBar" style="width:100%"></div></div>
+    <div id="enemyHpText" style="font-size:11px;color:#ef4444;margin-top:2px;">❤️ 30/30</div>
   </div>
-
-  <div style="text-align:center;">
-    <h2 style="margin:4px;">⚡ RIFT BATTLE ⚡</h2>
-    <div>Tura: <span id="turnNum">1</span></div>
-    <div>Energia: <span id="energy">3</span> / <span id="maxEnergy">3</span></div>
-  </div>
-
-  <div class="hero">
-    <img id="enemyHero" alt="Wróg">
-    <div>Shadowflare — AI</div>
-  </div>
-
 </div>
 
-<!-- Paski HP -->
-<div id="hp-bar">
-  <span>❤️ Twoje HP: <strong id="playerHP">30</strong></span>
-  <span>💀 Wróg HP: <strong id="enemyHP">30</strong></span>
+<div id="arena">Twoja tura — zagraj kartę lub zakończ turę!</div>
+
+<div id="board">
+  <div class="board-label">🛡️ Pole bitwy</div>
 </div>
 
-<!-- Log areny -->
-<div id="log">Witaj w Rift Battle! Twoja tura — zagraj kartę!</div>
-
-<!-- Pole bitwy -->
-<div id="arena">
-  <div id="playerField" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"></div>
-</div>
-
-<!-- Ręka gracza -->
+<div id="hand-label">🃏 Twoja ręka</div>
 <div id="hand"></div>
 
-<!-- Przyciski -->
-<div id="controls">
-  <button id="endTurnBtn">Zakończ turę ⏭️</button>
-</div>
+<button id="end-btn" onclick="endTurn()">Zakończ turę ⏭️</button>
+
+<div id="log"></div>
 
 <script src="battle.js"></script>
-
 </body>
 </html>
